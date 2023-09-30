@@ -1,20 +1,25 @@
-import { StatusBar } from 'expo-status-bar'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, Button, Linking } from 'react-native'
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style='auto' />
+    <View style={styles.body}>
+      <Text style={styles.text}>Just start learning react native</Text>
+      <Button title='github repo' onPress={() => Linking.openURL('https://github.com/waltsonzh/reactnativecourse')}></Button>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
+  body: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#0000ff',
     alignItems: 'center',
     justifyContent: 'center',
   },
+  text: {
+    color: '#ffffff',
+    fontSize: 20,
+    fontStyle: 'italic',
+    margin: 10,
+  }
 })
