@@ -1,47 +1,45 @@
 import { useState } from 'react'
-import { StyleSheet, Text, View, ScrollView, RefreshControl } from 'react-native'
+import { StyleSheet, Text, View, ScrollView, RefreshControl, FlatList, SectionList } from 'react-native'
 
 export default function App() {
-  const [items, setItems] = useState([])
-  const [count, setCount] = useState(0)
+  const [items, setItems] = useState([{ title: 'Title 1', data: ['Item 1-1', 'Item 1-2'] }])
+  const [count, setCount] = useState(2)
   const [refreshing, setRefreshing] = useState(false)
 
   const onRefresh = () => {
     setRefreshing(true)
-    setItems([{ key: count, item: `Item ${count}` }, ...items])
+    setItems([...items, { title: `Title ${count}`, data: [`Item ${count}-1`, `Item ${count}-2`] }])
     setCount((preCount) => preCount + 1)
     setRefreshing(false)
   }
 
   return (
-    <ScrollView horizontal={false} style={styles.body} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#ff00ff']} />}>
-      {items.map((item) => {
-        return (
-          <View key={item.key} style={styles.item}>
-            <Text style={styles.text}>{item.item}</Text>
-          </View>
-        )
-      })}
-    </ScrollView>
+    <SectionList
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      keyExtractor={(item, index) => index.toString()}
+      sections={items}
+      renderItem={({ item }) => <Text style={styles.text}>{item}</Text>}
+      renderSectionHeader={({ section }) => (
+        <View style={styles.title}>
+          <Text style={styles.text}>{section.title}</Text>
+        </View>
+      )}
+    />
   )
 }
 
 const styles = StyleSheet.create({
-  body: {
-    flex: 1,
-    flexDirection: 'column',
-    backgroundColor: '#ffffff',
-  },
-  item: {
+  title: {
+    borderWidth: 2,
     backgroundColor: '#4ae1fa',
-    justifyContent: 'center',
-    alignItems: 'center',
-    margin: 20,
+    fontSize: 40,
+    fontStyle: 'italic',
   },
   text: {
     color: '#000000',
-    fontSize: 35,
-    fontStyle: 'italic',
-    margin: 10,
+    fontSize: 30,
+    padding: 10,
+    textAlign: 'center',
+    borderWidth: 1,
   },
 })
