@@ -1,45 +1,38 @@
 import { useState } from 'react'
-import { StyleSheet, Text, View, ScrollView, RefreshControl, FlatList, SectionList } from 'react-native'
+import { StyleSheet, View, Text, StatusBar, SafeAreaView, TextInput } from 'react-native'
 
 export default function App() {
-  const [items, setItems] = useState([{ title: 'Title 1', data: ['Item 1-1', 'Item 1-2'] }])
-  const [count, setCount] = useState(2)
-  const [refreshing, setRefreshing] = useState(false)
-
-  const onRefresh = () => {
-    setRefreshing(true)
-    setItems([...items, { title: `Title ${count}`, data: [`Item ${count}-1`, `Item ${count}-2`] }])
-    setCount((preCount) => preCount + 1)
-    setRefreshing(false)
-  }
+  const [phone, setPhone] = useState('')
 
   return (
-    <SectionList
-      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-      keyExtractor={(item, index) => index.toString()}
-      sections={items}
-      renderItem={({ item }) => <Text style={styles.text}>{item}</Text>}
-      renderSectionHeader={({ section }) => (
-        <View style={styles.title}>
-          <Text style={styles.text}>{section.title}</Text>
-        </View>
-      )}
-    />
+    <SafeAreaView style={{ flex: 1 }}>
+      <StatusBar />
+      <View style={styles.body}>
+        <Text style={styles.text}>Please write your phone number:</Text>
+        <TextInput style={styles.input} placeholder='e.g. John' onChangeText={(value) => setPhone(value)} secureTextEntry />
+        <Text style={styles.text}>Your phone number is: {phone}</Text>
+      </View>
+    </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
-  title: {
-    borderWidth: 2,
-    backgroundColor: '#4ae1fa',
-    fontSize: 40,
-    fontStyle: 'italic',
+  body: {
+    flex: 1,
+    backgroundColor: '#ffffff',
+    alignItems: 'center',
   },
   text: {
     color: '#000000',
-    fontSize: 30,
-    padding: 10,
-    textAlign: 'center',
+    fontSize: 20,
+    margin: 10,
+  },
+  input: {
+    width: 200,
     borderWidth: 1,
+    borderColor: '#555',
+    borderRadius: 5,
+    textAlign: 'center',
+    fontSize: 20,
   },
 })
