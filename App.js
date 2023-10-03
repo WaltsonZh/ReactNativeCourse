@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { StyleSheet, View, Text, StatusBar, SafeAreaView, TextInput, Button, TouchableOpacity, TouchableHighlight, TouchableWithoutFeedback, Pressable, Alert, ToastAndroid, Modal } from 'react-native'
+import { StyleSheet, View, Text, StatusBar, SafeAreaView, TextInput, Button, TouchableOpacity, TouchableHighlight, TouchableWithoutFeedback, Pressable, Alert, ToastAndroid, Modal, Image, ImageBackground } from 'react-native'
 
 export default function App() {
   const [name, setName] = useState('')
@@ -15,39 +15,47 @@ export default function App() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <StatusBar />
-      <View style={styles.body}>
-        <Modal visible={showWarning} transparent onRequestClose={() => setShowWarning(false)} animationType='fade'>
-          <View style={styles.centered_view}>
-            <View style={styles.warning_modal}>
-              <View style={styles.warning_title}>
-                <Text style={styles.text}>WARNING!</Text>
+    <ImageBackground style={styles.body} source={{ uri: 'https://cdn.pixabay.com/photo/2013/07/12/12/35/texture-145968_960_720.png' }}>
+      <SafeAreaView style={{ flex: 1 }}>
+        <StatusBar />
+        <View style={styles.body}>
+          <Modal visible={showWarning} transparent onRequestClose={() => setShowWarning(false)} animationType='fade'>
+            <View style={styles.centered_view}>
+              <View style={styles.warning_modal}>
+                <View style={styles.warning_title}>
+                  <Text style={styles.text}>WARNING!</Text>
+                </View>
+                <View style={styles.warning_body}>
+                  <Text style={styles.text}>The name must be longer than 3 characters</Text>
+                </View>
+                <Pressable style={styles.warning_button} onPress={() => setShowWarning(false)} android_ripple={{ color: '#fff' }}>
+                  <Text style={styles.text}>OK</Text>
+                </Pressable>
               </View>
-              <View style={styles.warning_body}>
-                <Text style={styles.text}>The name must be longer than 3 characters</Text>
-              </View>
-              <Pressable style={styles.warning_button} onPress={() => setShowWarning(false)} android_ripple={{ color : '#fff'}}>
-                <Text style={styles.text}>OK</Text>
-              </Pressable>
             </View>
-          </View>
-        </Modal>
-        <Text style={styles.text}>Please write your name:</Text>
-        <TextInput style={styles.input} placeholder='e.g. John' onChangeText={(value) => setName(value)} />
-        <Pressable onPress={onPressHandler} hitSlop={{ top: 10, bottom: 10, right: 10, left: 10 }} android_ripple={{ color: '#00f' }} style={({ pressed }) => [{ backgroundColor: pressed ? '#dddddd' : '#00ff00' }, styles.button]}>
-          <Text style={styles.text}>{submitted ? 'Clear' : 'Submit'}</Text>
-        </Pressable>
-        {submitted ? <Text style={styles.text}>You are registered as {name}</Text> : null}
-      </View>
-    </SafeAreaView>
+          </Modal>
+          <Text style={styles.text}>Please write your name:</Text>
+          <TextInput style={styles.input} placeholder='e.g. John' onChangeText={(value) => setName(value)} />
+          <Pressable onPress={onPressHandler} hitSlop={{ top: 10, bottom: 10, right: 10, left: 10 }} android_ripple={{ color: '#00f' }} style={({ pressed }) => [{ backgroundColor: pressed ? '#dddddd' : '#00ff00' }, styles.button]}>
+            <Text style={styles.text}>{submitted ? 'Clear' : 'Submit'}</Text>
+          </Pressable>
+          {submitted ? (
+            <View style={styles.body}>
+              <Text style={styles.text}>You are registered as {name}</Text>
+              <Image style={styles.image} source={require('./assets/done.png')} resizeMode='stretch' />
+            </View>
+          ) : (
+            <Image style={styles.image} source={{ uri: 'https://cdn.pixabay.com/photo/2018/01/04/15/51/404-error-3060993_960_720.png' }} resizeMode='stretch' />
+          )}
+        </View>
+      </SafeAreaView>
+    </ImageBackground>
   )
 }
 
 const styles = StyleSheet.create({
   body: {
     flex: 1,
-    backgroundColor: '#ffffff',
     alignItems: 'center',
   },
   text: {
@@ -104,5 +112,10 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 20,
     borderBottomLeftRadius: 20,
     justifyContent: 'center',
+  },
+  image: {
+    width: 100,
+    height: 100,
+    margin: 10,
   },
 })
