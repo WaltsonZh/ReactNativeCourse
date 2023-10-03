@@ -1,5 +1,7 @@
 import { useState } from 'react'
-import { StyleSheet, View, Text, StatusBar, SafeAreaView, TextInput, Button, TouchableOpacity, TouchableHighlight, TouchableWithoutFeedback, Pressable, Alert, ToastAndroid, Modal, Image, ImageBackground } from 'react-native'
+import { StyleSheet, View, Text, StatusBar, SafeAreaView, TextInput, Pressable, Modal, Image, ImageBackground } from 'react-native'
+import CustomButton from './src/CustomButton'
+import Header from './src/Header'
 
 export default function App() {
   const [name, setName] = useState('')
@@ -15,10 +17,16 @@ export default function App() {
   }
 
   return (
-    <ImageBackground style={styles.body} source={{ uri: 'https://cdn.pixabay.com/photo/2013/07/12/12/35/texture-145968_960_720.png' }}>
-      <SafeAreaView style={{ flex: 1 }}>
+    <ImageBackground
+      style={styles.body}
+      source={{
+        uri: 'https://cdn.pixabay.com/photo/2013/07/12/12/35/texture-145968_960_720.png',
+      }}
+    >
+      <SafeAreaView style={{ flex: 1, width: '100%' }}>
         <StatusBar />
         <View style={styles.body}>
+          <Header />
           <Modal visible={showWarning} transparent onRequestClose={() => setShowWarning(false)} animationType='fade'>
             <View style={styles.centered_view}>
               <View style={styles.warning_modal}>
@@ -36,16 +44,21 @@ export default function App() {
           </Modal>
           <Text style={styles.text}>Please write your name:</Text>
           <TextInput style={styles.input} placeholder='e.g. John' onChangeText={(value) => setName(value)} />
-          <Pressable onPress={onPressHandler} hitSlop={{ top: 10, bottom: 10, right: 10, left: 10 }} android_ripple={{ color: '#00f' }} style={({ pressed }) => [{ backgroundColor: pressed ? '#dddddd' : '#00ff00' }, styles.button]}>
-            <Text style={styles.text}>{submitted ? 'Clear' : 'Submit'}</Text>
-          </Pressable>
+          <CustomButton onPressFunction={onPressHandler} title={submitted ? 'Clear' : 'Submit'} color='#0f0' />
+          <CustomButton style={{ margin: 10 }} onPressFunction={onPressHandler} title='Test' color='#f0f' />
           {submitted ? (
             <View style={styles.body}>
               <Text style={styles.text}>You are registered as {name}</Text>
               <Image style={styles.image} source={require('./assets/done.png')} resizeMode='stretch' />
             </View>
           ) : (
-            <Image style={styles.image} source={{ uri: 'https://cdn.pixabay.com/photo/2018/01/04/15/51/404-error-3060993_960_720.png' }} resizeMode='stretch' />
+            <Image
+              style={styles.image}
+              source={{
+                uri: 'https://cdn.pixabay.com/photo/2018/01/04/15/51/404-error-3060993_960_720.png',
+              }}
+              resizeMode='stretch'
+            />
           )}
         </View>
       </SafeAreaView>
@@ -55,6 +68,7 @@ export default function App() {
 
 const styles = StyleSheet.create({
   body: {
+    width: '100%',
     flex: 1,
     alignItems: 'center',
   },
@@ -72,13 +86,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 20,
     marginBottom: 10,
-  },
-  button: {
-    width: 150,
-    height: 50,
-    // backgroundColor: '#00ff00',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   centered_view: {
     flex: 1,
