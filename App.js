@@ -1,38 +1,16 @@
 import { useState } from 'react'
-import { StyleSheet, View, Text, StatusBar, SafeAreaView, TextInput, Button, TouchableOpacity, TouchableHighlight, TouchableWithoutFeedback, Pressable, Alert, ToastAndroid } from 'react-native'
+import { StyleSheet, View, Text, StatusBar, SafeAreaView, TextInput, Button, TouchableOpacity, TouchableHighlight, TouchableWithoutFeedback, Pressable, Alert, ToastAndroid, Modal } from 'react-native'
 
 export default function App() {
   const [name, setName] = useState('')
   const [submitted, setSubmitted] = useState(false)
+  const [showWarning, setShowWarning] = useState(false)
 
   const onPressHandler = () => {
     if (name.length > 3) {
       setSubmitted((prevSubmitted) => !prevSubmitted)
     } else {
-      // Alert.alert(
-      //   'Warning',
-      //   'The name must be longer than 3 characters',
-      //   [
-      //     {
-      //       text: 'Do not show again',
-      //       onPress: () => console.warn('do not show again'),
-      //     },
-      //     {
-      //       text: 'Cancel',
-      //       onPress: () => console.warn('cancel'),
-      //     },
-      //     {
-      //       text: 'OK',
-      //       onPress: () => console.warn('OK Pressed'),
-      //     },
-      //   ],
-      //   {
-      //     cancelable: true,
-      //     onDismiss: () => console.warn('alert dismissed'),
-      //   }
-      // )
-
-      ToastAndroid.showWithGravity('The name must be longer than 3 characters', ToastAndroid.LONG, ToastAndroid.TOP)
+      setShowWarning(true)
     }
   }
 
@@ -40,27 +18,26 @@ export default function App() {
     <SafeAreaView style={{ flex: 1 }}>
       <StatusBar />
       <View style={styles.body}>
+        <Modal visible={showWarning} transparent onRequestClose={() => setShowWarning(false)} animationType='fade'>
+          <View style={styles.centered_view}>
+            <View style={styles.warning_modal}>
+              <View style={styles.warning_title}>
+                <Text style={styles.text}>WARNING!</Text>
+              </View>
+              <View style={styles.warning_body}>
+                <Text style={styles.text}>The name must be longer than 3 characters</Text>
+              </View>
+              <Pressable style={styles.warning_button} onPress={() => setShowWarning(false)} android_ripple={{ color : '#fff'}}>
+                <Text style={styles.text}>OK</Text>
+              </Pressable>
+            </View>
+          </View>
+        </Modal>
         <Text style={styles.text}>Please write your name:</Text>
         <TextInput style={styles.input} placeholder='e.g. John' onChangeText={(value) => setName(value)} />
-
-        {/* <Button title={submitted ? 'Clear' : 'Submit'} onPress={onPressHandler} color='#f00'/> */}
-
-        {/* <TouchableOpacity style={styles.button} onPress={onPressHandler} activeOpacity={0.5}>
-          <Text style={styles.text}>{submitted ? 'Clear' : 'Submit'}</Text>
-        </TouchableOpacity> */}
-
-        {/* <TouchableHighlight style={styles.button} onPress={onPressHandler} underlayColor='#dddddd'>
-          <Text style={styles.text}>{submitted ? 'Clear' : 'Submit'}</Text>
-        </TouchableHighlight> */}
-
-        {/* <TouchableWithoutFeedback style={styles.button} onPress={onPressHandler}>
-          <Text style={styles.text}>{submitted ? 'Clear' : 'Submit'}</Text>
-        </TouchableWithoutFeedback> */}
-
         <Pressable onPress={onPressHandler} hitSlop={{ top: 10, bottom: 10, right: 10, left: 10 }} android_ripple={{ color: '#00f' }} style={({ pressed }) => [{ backgroundColor: pressed ? '#dddddd' : '#00ff00' }, styles.button]}>
           <Text style={styles.text}>{submitted ? 'Clear' : 'Submit'}</Text>
         </Pressable>
-
         {submitted ? <Text style={styles.text}>You are registered as {name}</Text> : null}
       </View>
     </SafeAreaView>
@@ -77,6 +54,7 @@ const styles = StyleSheet.create({
     color: '#000000',
     fontSize: 20,
     margin: 10,
+    textAlign: 'center',
   },
   input: {
     width: 200,
@@ -92,6 +70,39 @@ const styles = StyleSheet.create({
     height: 50,
     // backgroundColor: '#00ff00',
     alignItems: 'center',
+    justifyContent: 'center',
+  },
+  centered_view: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#00000099',
+  },
+  warning_modal: {
+    width: 300,
+    height: 300,
+    backgroundColor: '#ffffff',
+    borderWidth: 1,
+    borderRadius: 20,
+  },
+  warning_title: {
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#ff0',
+    borderTopRightRadius: 20,
+    borderTopLeftRadius: 20,
+  },
+  warning_body: {
+    height: 200,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  warning_button: {
+    height: 50,
+    backgroundColor: '#0ff',
+    borderBottomRightRadius: 20,
+    borderBottomLeftRadius: 20,
     justifyContent: 'center',
   },
 })
