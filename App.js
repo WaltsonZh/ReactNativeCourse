@@ -1,67 +1,49 @@
 import { NavigationContainer } from '@react-navigation/native'
-import { createStackNavigator } from '@react-navigation/stack'
-import { StyleSheet, View, Text, Pressable } from 'react-native'
+import ScreenA from './ScreenA'
+import ScreenB from './ScreenB'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
+import { SafeAreaView, StatusBar } from 'react-native'
 
-const Stack = createStackNavigator()
-
-function ScreenA(prop) {
-  const { navigation } = prop
-
-  const onPressHandler = () => {
-    navigation.navigate('Screen B')
-    // navigation.replace('Screen B')
-  }
-
-  return (
-    <View style={styles.body}>
-      <Text style={styles.text}>Screen A</Text>
-      <Pressable style={({ pressed }) => ({ backgroundColor: pressed ? '#ddd' : '#0f0' })} onPress={onPressHandler}>
-        <Text style={styles.text}>Go to Screen B</Text>
-      </Pressable>
-    </View>
-  )
-}
-
-function ScreenB(prop) {
-  const { navigation } = prop
-
-  const onPressHandler = () => {
-    navigation.navigate('Screen A')
-    // navigation.goBack()
-  }
-
-  return (
-    <View style={styles.body}>
-      <Text style={styles.text}>Screen B</Text>
-      <Pressable style={({ pressed }) => ({ backgroundColor: pressed ? '#ddd' : '#0f0' })} onPress={onPressHandler}>
-        <Text style={styles.text}>Go Back to Screen A</Text>
-      </Pressable>
-    </View>
-  )
-}
+// const Tab = createBottomTabNavigator()
+// const Tab = createMaterialBottomTabNavigator()
+const Tab = createMaterialTopTabNavigator()
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-      // screenOptions={{ header: () => null }}
-      >
-        <Stack.Screen name='Screen A' component={ScreenA} />
-        <Stack.Screen name='Screen B' component={ScreenB} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <SafeAreaView style={{ flex: 1 }}>
+      <StatusBar />
+      <NavigationContainer>
+        <Tab.Navigator
+          screenOptions={({ route }) => ({
+            tabBarIcon: ({ focused, size, color }) => {
+              let iconName
+              if (route.name === 'Screen A') {
+                iconName = 'android'
+                size = focused ? 25 : 20
+                color = focused ? '#f0f' : '#555'
+              } else if (route.name === 'Screen B') {
+                iconName = 'apple'
+                size = focused ? 25 : 20
+                color = focused ? '#f0f' : '#555'
+              }
+              return <FontAwesome name={iconName} size={size} color={color} />
+            },
+            tabBarActiveTintColor: '#f0f',
+            tabBarInactiveTintColor: '#555',
+            tabBarActiveBackgroundColor: '#fff',
+            tabBarInactiveBackgroundColor: '#999',
+          })}
+          inactiveColor='#888'
+          activeColor='#f0edf6'
+          barStyle={{ backgroundColor: '#694fad' }}
+        >
+          <Tab.Screen name='Screen A' component={ScreenA} />
+          <Tab.Screen name='Screen B' component={ScreenB} />
+        </Tab.Navigator>
+      </NavigationContainer>
+    </SafeAreaView>
   )
 }
-
-const styles = StyleSheet.create({
-  body: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  text: {
-    fontSize: 40,
-    fontWeight: 'bold',
-    margin: 10,
-  },
-})
