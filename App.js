@@ -1,49 +1,62 @@
 import { NavigationContainer } from '@react-navigation/native'
-import ScreenA from './ScreenA'
-import ScreenB from './ScreenB'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
+import ScreenA from './src/ScreenA'
+import ScreenB from './src/ScreenB'
+import { createDrawerNavigator } from '@react-navigation/drawer'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
-import { SafeAreaView, StatusBar } from 'react-native'
+import { StatusBar } from 'react-native'
+import 'react-native-gesture-handler'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 
-// const Tab = createBottomTabNavigator()
-// const Tab = createMaterialBottomTabNavigator()
-const Tab = createMaterialTopTabNavigator()
+const Drawer = createDrawerNavigator()
 
 export default function App() {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaProvider>
       <StatusBar />
       <NavigationContainer>
-        <Tab.Navigator
-          screenOptions={({ route }) => ({
-            tabBarIcon: ({ focused, size, color }) => {
-              let iconName
-              if (route.name === 'Screen A') {
-                iconName = 'android'
-                size = focused ? 25 : 20
-                color = focused ? '#f0f' : '#555'
-              } else if (route.name === 'Screen B') {
-                iconName = 'apple'
-                size = focused ? 25 : 20
-                color = focused ? '#f0f' : '#555'
-              }
-              return <FontAwesome name={iconName} size={size} color={color} />
+        <Drawer.Navigator
+          screenOptions={{
+            drawerPosition: 'left',
+            drawerType: 'front',
+            swipeEdgeWidth: 100,
+            drawerHideStatusBarOnOpen: true,
+            overlayColor: '#00000090',
+            drawerStyle: {
+              backgroundColor: '#e6e6e6',
+              width: 250,
             },
-            tabBarActiveTintColor: '#f0f',
-            tabBarInactiveTintColor: '#555',
-            tabBarActiveBackgroundColor: '#fff',
-            tabBarInactiveBackgroundColor: '#999',
-          })}
-          inactiveColor='#888'
-          activeColor='#f0edf6'
-          barStyle={{ backgroundColor: '#694fad' }}
+            headerShown: true,
+            swipeEnabled: true,
+            headerTitleAlign: 'center',
+            headerStyle: {
+              backgroundColor: '#0080ff',
+            },
+            headerTintColor: '#ffffff',
+            headerTitleStyle: {
+              fontSize: 25,
+              fontWeight: 'bold',
+            },
+          }}
+          initialRouteName='Screen A'
         >
-          <Tab.Screen name='Screen A' component={ScreenA} />
-          <Tab.Screen name='Screen B' component={ScreenB} />
-        </Tab.Navigator>
+          <Drawer.Screen
+            name='Screen A'
+            component={ScreenA}
+            options={{
+              title: 'Screen A title',
+              drawerIcon: ({ focused }) => <FontAwesome name='android' size={focused ? 25 : 20} color={focused ? '#0000ff' : '#999999'} />,
+            }}
+          />
+          <Drawer.Screen
+            name='Screen B'
+            component={ScreenB}
+            options={{
+              title: 'Screen B title',
+              drawerIcon: ({ focused }) => <FontAwesome name='apple' size={focused ? 25 : 20} color={focused ? '#0000ff' : '#999999'} />,
+            }}
+          />
+        </Drawer.Navigator>
       </NavigationContainer>
-    </SafeAreaView>
+    </SafeAreaProvider>
   )
 }
