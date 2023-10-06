@@ -54,6 +54,7 @@ export default function App() {
               title: 'Screen B title',
               drawerIcon: ({ focused }) => <FontAwesome name='apple' size={focused ? 25 : 20} color={focused ? '#0000ff' : '#999999'} />,
             }}
+            initialParams={{ itemName: 'Item from Screen A', itemId: 12 }}
           />
         </Drawer.Navigator>
       </NavigationContainer>
