@@ -6,10 +6,17 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { StatusBar } from 'react-native'
 import 'react-native-gesture-handler'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
+import { useFonts } from 'expo-font'
 
 const Drawer = createDrawerNavigator()
 
 export default function App() {
+  useFonts({
+    AbrilFatface: require('./assets/fonts/AbrilFatface-Regular.ttf'),
+    DancingScript: require('./assets/fonts/DancingScript-Regular.ttf'),
+    IndieFlower: require('./assets/fonts/IndieFlower-Regular.ttf'),
+  })
+
   return (
     <SafeAreaProvider>
       <StatusBar />
