@@ -1,6 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native'
-import ScreenA from './src/ScreenA'
-import ScreenB from './src/ScreenB'
+import ScreenA from './src/screens/ScreenA'
+import ScreenB from './src/screens/ScreenB'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { StatusBar } from 'react-native'
