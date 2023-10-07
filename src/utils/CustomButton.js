@@ -22,7 +22,7 @@ export default function CustomButton(prop) {
 
 const styles = StyleSheet.create({
   text: {
-    color: '#000000',
+    color: '#fff',
     fontSize: 20,
     margin: 10,
     textAlign: 'center',
@@ -33,5 +33,7 @@ const styles = StyleSheet.create({
     // backgroundColor: '#00ff00',
     alignItems: 'center',
     justifyContent: 'center',
+    borderRadius: 5,
+    marginTop: 10,
   },
 })
