@@ -1,8 +1,8 @@
-import { StyleSheet, View, Text, Pressable, Alert, TextInput } from 'react-native'
+import { StyleSheet, View, Text, Alert, TextInput } from 'react-native'
 import GlobalStyle from '../utils/GlobalStyle'
 import { useEffect, useState } from 'react'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import CustomButton from '../utils/CustomButton'
+import { db } from './Login'
 
 export default function Home(prop) {
   const { navigation, route } = prop
@@ -15,12 +15,23 @@ export default function Home(prop) {
 
   const getData = () => {
     try {
-      AsyncStorage.getItem('UserData').then((value) => {
-        if (value !== null) {
-          let user = JSON.parse(value)
-          setName(user.Name)
-          setAge(user.Age)
-        }
+      // AsyncStorage.getItem('UserData').then((value) => {
+      //   if (value !== null) {
+      //     let user = JSON.parse(value)
+      //     setName(user.Name)
+      //     setAge(user.Age)
+      //   }
+      // })
+      db.transaction((tx) => {
+        tx.executeSql('SELECT Name, Age FROM Users', [], (tx, results) => {
+          var len = results.rows.length
+          if (len > 0) {
+            var userName = results.rows.item(0).Name
+            var userAge = results.rows.item(0).Age
+            setName(userName)
+            setAge(userAge)
+          }
+        })
       })
     } catch (err) {
       console.log(err)
@@ -32,10 +43,13 @@ export default function Home(prop) {
       Alert.alert('Warning', 'Please write your data.')
     } else {
       try {
-        var user = {
-          Name: name,
-        }
-        await AsyncStorage.mergeItem('UserData', JSON.stringify(user))
+        // var user = {
+        //   Name: name,
+        // }
+        // await AsyncStorage.mergeItem('UserData', JSON.stringify(user))
+        await db.transactionAsync(async (tx) => {
+          await tx.executeSqlAsync('UPDATE Users SET Name = ? WHERE ID = 1', [name])
+        })
         Alert.alert('Success', 'Your data has been updated.')
       } catch (err) {
         console.log(err)
@@ -45,7 +59,11 @@ export default function Home(prop) {
 
   const removeData = async () => {
     try {
-      await AsyncStorage.clear()
+      // await AsyncStorage.clear()
+      await db.transactionAsync(async (tx) => {
+        await tx.executeSqlAsync('DELETE FROM Users')
+        await tx.executeSqlAsync('DELETE FROM sqlite_sequence WHERE name = ?', ['Users'])
+      })
       navigation.navigate('Login')
     } catch (err) {
       console.log(err)
