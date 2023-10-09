@@ -3,11 +3,17 @@ import GlobalStyle from '../utils/GlobalStyle'
 import { useEffect, useState } from 'react'
 import CustomButton from '../utils/CustomButton'
 import { db } from './Login'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectName, selectAge, setName, setAge, increaseAge } from '../redux/users/userSlice'
 
 export default function Home(prop) {
-  const { navigation, route } = prop
-  const [name, setName] = useState('')
-  const [age, setAge] = useState('')
+  const { navigation } = prop
+  const dispatch = useDispatch()
+  const name = useSelector(selectName)
+  const age = useSelector(selectAge)
+
+  // const [name, setName] = useState('')
+  // const [age, setAge] = useState('')
 
   useEffect(() => {
     getData()
@@ -15,21 +21,14 @@ export default function Home(prop) {
 
   const getData = () => {
     try {
-      // AsyncStorage.getItem('UserData').then((value) => {
-      //   if (value !== null) {
-      //     let user = JSON.parse(value)
-      //     setName(user.Name)
-      //     setAge(user.Age)
-      //   }
-      // })
       db.transaction((tx) => {
         tx.executeSql('SELECT Name, Age FROM Users', [], (tx, results) => {
           var len = results.rows.length
           if (len > 0) {
             var userName = results.rows.item(0).Name
             var userAge = results.rows.item(0).Age
-            setName(userName)
-            setAge(userAge)
+            dispatch(setName(userName))
+            dispatch(setAge(userAge))
           }
         })
       })
@@ -43,10 +42,6 @@ export default function Home(prop) {
       Alert.alert('Warning', 'Please write your data.')
     } else {
       try {
-        // var user = {
-        //   Name: name,
-        // }
-        // await AsyncStorage.mergeItem('UserData', JSON.stringify(user))
         await db.transactionAsync(async (tx) => {
           await tx.executeSqlAsync('UPDATE Users SET Name = ? WHERE ID = 1', [name])
         })
@@ -59,7 +54,6 @@ export default function Home(prop) {
 
   const removeData = async () => {
     try {
-      // await AsyncStorage.clear()
       await db.transactionAsync(async (tx) => {
         await tx.executeSqlAsync('DELETE FROM Users')
         await tx.executeSqlAsync('DELETE FROM sqlite_sequence WHERE name = ?', ['Users'])
@@ -74,9 +68,10 @@ export default function Home(prop) {
     <View style={styles.body}>
       <Text style={[GlobalStyle.CustomFont, styles.text]}>Welcome {name} !</Text>
       <Text style={[GlobalStyle.CustomFont, styles.text]}>Your age is {age}</Text>
-      <TextInput style={styles.input} value={name} onChangeText={(value) => setName(value)} />
+      <TextInput style={styles.input} value={name} onChangeText={(value) => dispatch(setName(value))} />
       <CustomButton title='Update' color='#ff7f00' onPressFunction={updateData} />
       <CustomButton title='Remove' color='#f40100' onPressFunction={removeData} />
+      <CustomButton title='Increase Age' color='#0080ff' onPressFunction={() => dispatch(increaseAge())} />
     </View>
   )
 }

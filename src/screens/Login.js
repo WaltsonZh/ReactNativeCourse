@@ -2,13 +2,19 @@ import { StyleSheet, View, Image, Text, TextInput, Alert } from 'react-native'
 import CustomButton from '../utils/CustomButton'
 import { useState, useEffect } from 'react'
 import * as SQLite from 'expo-sqlite'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectAge, selectName, setAge, setName } from '../redux/users/userSlice'
 
 export const db = SQLite.openDatabase('MainDB')
 
 export default function Login(prop) {
   const { navigation } = prop
-  const [name, setName] = useState('')
-  const [age, setAge] = useState()
+  const dispatch = useDispatch()
+  const name = useSelector(selectName)
+  const age = useSelector(selectAge)
+
+  // const [name, setName] = useState('')
+  // const [age, setAge] = useState()
 
   useEffect(() => {
     createDatabase()
@@ -23,18 +29,12 @@ export default function Login(prop) {
 
   const getData = () => {
     try {
-      // AsyncStorage.getItem('UserData').then((value) => {
-      //   if (value !== null) {
-      //     navigation.navigate('Home')
-      //   }
-      // })
       db.transaction((tx) => {
         tx.executeSql('SELECT Name, Age FROM Users', [], (tx, results) => {
           var len = results.rows.length
           if (len > 0) {
             navigation.navigate('Home')
           }
-          console.log(results.rows._array)
         })
       })
     } catch (err) {
@@ -47,11 +47,6 @@ export default function Login(prop) {
       Alert.alert('Warning', 'Please write your data.')
     } else {
       try {
-        // var user = {
-        //   Name: name,
-        //   Age: age,
-        // }
-        // await AsyncStorage.setItem('UserData', JSON.stringify(user))
         await db.transactionAsync(async (tx) => {
           await tx.executeSqlAsync('INSERT INTO Users (Name, Age) VALUES(?, ?)', [name, age])
         })
@@ -64,10 +59,10 @@ export default function Login(prop) {
 
   return (
     <View style={styles.body}>
-      <Image style={styles.logo} source={require('../../assets/sqlite.png')} />
-      <Text style={styles.text}>SQLite</Text>
-      <TextInput style={styles.input} placeholder='Enter your name' onChangeText={(value) => setName(value)} />
-      <TextInput style={styles.input} placeholder='Enter your age' onChangeText={(value) => setAge(value)} />
+      <Image style={styles.logo} source={require('../../assets/redux.png')} />
+      <Text style={styles.text}>Redux</Text>
+      <TextInput style={styles.input} placeholder='Enter your name' onChangeText={(value) => dispatch(setName(value))} />
+      <TextInput style={styles.input} placeholder='Enter your age' onChangeText={(value) => dispatch(setAge(value))} />
       <CustomButton title='Login' color='#1eb900' onPressFunction={setData} />
     </View>
   )
@@ -80,14 +75,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#0080ff',
   },
   logo: {
-    width: 200,
-    height: 100,
+    width: 150,
+    height: 150,
     margin: 20,
   },
   text: {
     fontSize: 30,
     color: '#fff',
-    marginBottom: 120,
+    marginBottom: 100,
   },
   input: {
     width: 300,
