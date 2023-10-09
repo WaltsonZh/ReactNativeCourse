@@ -13,9 +13,6 @@ export default function Login(prop) {
   const name = useSelector(selectName)
   const age = useSelector(selectAge)
 
-  // const [name, setName] = useState('')
-  // const [age, setAge] = useState()
-
   useEffect(() => {
     createDatabase()
     getData()
@@ -59,7 +56,7 @@ export default function Login(prop) {
 
   return (
     <View style={styles.body}>
-      <Image style={styles.logo} source={require('../../assets/redux.png')} />
+      {/* <Image style={styles.logo} source={require('../../assets/redux.png')} /> */}
       <Text style={styles.text}>Redux</Text>
       <TextInput style={styles.input} placeholder='Enter your name' onChangeText={(value) => dispatch(setName(value))} />
       <TextInput style={styles.input} placeholder='Enter your age' onChangeText={(value) => dispatch(setAge(value))} />

@@ -1,22 +1,22 @@
-import { StyleSheet, View, Text, Alert, TextInput } from 'react-native'
+import { StyleSheet, View, Text, Alert, TextInput, FlatList } from 'react-native'
 import GlobalStyle from '../utils/GlobalStyle'
 import { useEffect, useState } from 'react'
 import CustomButton from '../utils/CustomButton'
 import { db } from './Login'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectName, selectAge, setName, setAge, increaseAge } from '../redux/users/userSlice'
+import { fetchCities, selectCities } from '../redux/cities/citiesSlice'
 
 export default function Home(prop) {
   const { navigation } = prop
   const dispatch = useDispatch()
   const name = useSelector(selectName)
   const age = useSelector(selectAge)
-
-  // const [name, setName] = useState('')
-  // const [age, setAge] = useState('')
+  const { cities, status } = useSelector(selectCities)
 
   useEffect(() => {
     getData()
+    dispatch(fetchCities())
   }, [])
 
   const getData = () => {
@@ -67,11 +67,21 @@ export default function Home(prop) {
   return (
     <View style={styles.body}>
       <Text style={[GlobalStyle.CustomFont, styles.text]}>Welcome {name} !</Text>
-      <Text style={[GlobalStyle.CustomFont, styles.text]}>Your age is {age}</Text>
+      <FlatList
+        data={cities}
+        renderItem={({ item }) => (
+          <View style={styles.item}>
+            <Text style={styles.title}>{item.country}</Text>
+            <Text style={styles.subtitle}>{item.city}</Text>
+          </View>
+        )}
+        keyExtractor={(item, index) => index.toString()}
+      />
+      {/* <Text style={[GlobalStyle.CustomFont, styles.text]}>Your age is {age}</Text>
       <TextInput style={styles.input} value={name} onChangeText={(value) => dispatch(setName(value))} />
       <CustomButton title='Update' color='#ff7f00' onPressFunction={updateData} />
       <CustomButton title='Remove' color='#f40100' onPressFunction={removeData} />
-      <CustomButton title='Increase Age' color='#0080ff' onPressFunction={() => dispatch(increaseAge())} />
+      <CustomButton title='Increase Age' color='#0080ff' onPressFunction={() => dispatch(increaseAge())} /> */}
     </View>
   )
 }
@@ -97,4 +107,23 @@ const styles = StyleSheet.create({
     marginTop: 130,
     marginBottom: 10,
   },
+  item: {
+    backgroundColor: '#fff',
+    borderWidth: 2,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    margin: 7,
+    width: 350,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 30,
+    margin: 10,
+  },
+  subtitle: {
+    fontSize: 20,
+    margin: 10,
+    color: '#999'
+  }
 })
