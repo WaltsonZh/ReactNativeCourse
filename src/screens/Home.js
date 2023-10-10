@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, Alert, TextInput, FlatList } from 'react-native'
+import { StyleSheet, View, Text, Alert, TextInput, FlatList, TouchableOpacity } from 'react-native'
 import GlobalStyle from '../utils/GlobalStyle'
 import { useEffect, useState } from 'react'
 import CustomButton from '../utils/CustomButton'
@@ -6,12 +6,15 @@ import { db } from './Login'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectName, selectAge, setName, setAge, increaseAge } from '../redux/users/userSlice'
 import { fetchCities, selectCities } from '../redux/cities/citiesSlice'
+import sendPushNotification from '../redux/notifications/sendPushNotification'
+import { selectExpoPushToken } from '../redux/notifications/notificationSlices'
 
 export default function Home(prop) {
   const { navigation } = prop
   const dispatch = useDispatch()
   const name = useSelector(selectName)
   const age = useSelector(selectAge)
+  const expoPushToken = useSelector(selectExpoPushToken)
   const { cities, status } = useSelector(selectCities)
 
   useEffect(() => {
@@ -22,7 +25,7 @@ export default function Home(prop) {
   const getData = () => {
     try {
       db.transaction((tx) => {
-        tx.executeSql('SELECT Name, Age FROM Users', [], (tx, results) => {
+        tx.executeSql('SELECT * FROM Users', [], (tx, results) => {
           var len = results.rows.length
           if (len > 0) {
             var userName = results.rows.item(0).Name
@@ -57,6 +60,8 @@ export default function Home(prop) {
       await db.transactionAsync(async (tx) => {
         await tx.executeSqlAsync('DELETE FROM Users')
         await tx.executeSqlAsync('DELETE FROM sqlite_sequence WHERE name = ?', ['Users'])
+        dispatch(setName(''))
+        dispatch(setAge(''))
       })
       navigation.navigate('Login')
     } catch (err) {
@@ -70,10 +75,12 @@ export default function Home(prop) {
       <FlatList
         data={cities}
         renderItem={({ item }) => (
-          <View style={styles.item}>
-            <Text style={styles.title}>{item.country}</Text>
-            <Text style={styles.subtitle}>{item.city}</Text>
-          </View>
+          <TouchableOpacity onPress={async () => await sendPushNotification(expoPushToken, item.country, item.city)}>
+            <View style={styles.item}>
+              <Text style={styles.title}>{item.country}</Text>
+              <Text style={styles.subtitle}>{item.city}</Text>
+            </View>
+          </TouchableOpacity>
         )}
         keyExtractor={(item, index) => index.toString()}
       />
@@ -124,6 +131,6 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 20,
     margin: 10,
-    color: '#999'
-  }
+    color: '#999',
+  },
 })

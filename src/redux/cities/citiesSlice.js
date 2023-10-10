@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
-const CITIES_URL = 'http://10.1.1.16:8000/cities'
+const CITIES_URL = 'http://10.1.1.10:8000/cities'
 
 const initialState = {
   cities: [],
