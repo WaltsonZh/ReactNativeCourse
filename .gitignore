@@ -37,4 +37,8 @@ yarn-error.*
 # Program Data
 %ProgramData%
 
+#.vscode
 .vscode
+
+# app.json
+app.json
