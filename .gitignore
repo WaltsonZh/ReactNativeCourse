@@ -40,8 +40,5 @@ yarn-error.*
 #.vscode
 .vscode
 
-# app.json
-app.json
-
 # ggshield
 .cache_ggshield

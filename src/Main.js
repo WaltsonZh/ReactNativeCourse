@@ -12,12 +12,13 @@ import { useEffect } from 'react'
 import { setExpoPushToken, setNotification } from './redux/notifications/notificationSlices'
 import { useRef } from 'react'
 import Map from './screens/Map'
+import Camera from './screens/Camera'
 
 // ios weird error
-const av = new Animated.Value(0)
-av.addListener(() => {
-  return
-})
+// const av = new Animated.Value(0)
+// av.addListener(() => {
+//   return
+// })
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -117,6 +118,7 @@ export default function Main() {
             />
             <Stack.Screen name='Home' component={Home} />
             <Stack.Screen name='Map' component={Map} />
+            <Stack.Screen name='Camera' component={Camera} />
           </Stack.Navigator>
         </NavigationContainer>
       </SafeAreaView>
