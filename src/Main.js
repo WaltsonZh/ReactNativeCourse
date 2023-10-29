@@ -4,13 +4,14 @@ import Login from './screens/Login'
 import { Animated, StatusBar, SafeAreaView } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { useFonts } from 'expo-font'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import * as Device from 'expo-device'
 import * as Notifications from 'expo-notifications'
 import Constants from 'expo-constants'
 import { useEffect } from 'react'
-import { selectExpoPushToken, selectNotification, setExpoPushToken, setNotification } from './redux/notifications/notificationSlices'
+import { setExpoPushToken, setNotification } from './redux/notifications/notificationSlices'
 import { useRef } from 'react'
+import Map from './screens/Map'
 
 // ios weird error
 const av = new Animated.Value(0)
@@ -67,8 +68,6 @@ const Stack = createStackNavigator()
 export default function Main() {
   const [fontsLoaded, fontError] = useFonts({ DancingScript: require('../assets/fonts/DancingScript-Regular.ttf') })
   const dispatch = useDispatch()
-  const expoPushToken = useSelector(selectExpoPushToken)
-  const notification = useSelector(selectNotification)
   const notificationListener = useRef()
   const responseListener = useRef()
 
@@ -117,6 +116,7 @@ export default function Main() {
               }}
             />
             <Stack.Screen name='Home' component={Home} />
+            <Stack.Screen name='Map' component={Map} />
           </Stack.Navigator>
         </NavigationContainer>
       </SafeAreaView>

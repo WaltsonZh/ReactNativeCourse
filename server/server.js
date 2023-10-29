@@ -10,7 +10,7 @@ app.get('/cities', (req, res) => {
   fs.readFile(path.join(__dirname, 'data', 'cities.json'), 'utf-8',  (err, data) => {
     if (err) {
       console.error('err', err)
-      res.status(500).send('Can\t read cities.json')
+      res.status(500).send('Can\'t read cities.json')
     } else {
       res.send(data)
     }

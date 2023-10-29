@@ -75,7 +75,16 @@ export default function Home(prop) {
       <FlatList
         data={cities}
         renderItem={({ item }) => (
-          <TouchableOpacity onPress={async () => await sendPushNotification(expoPushToken, item.country, item.city)}>
+          <TouchableOpacity
+            onPress={async () => {
+              await sendPushNotification(expoPushToken, item.country, item.city)
+              navigation.navigate('Map', {
+                city: item.city,
+                lat: item.lat,
+                lng: item.lng,
+              })
+            }}
+          >
             <View style={styles.item}>
               <Text style={styles.title}>{item.country}</Text>
               <Text style={styles.subtitle}>{item.city}</Text>

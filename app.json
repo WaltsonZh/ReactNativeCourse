@@ -11,19 +11,25 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.waltson.ReactNativeCourse"
+      "bundleIdentifier": "com.waltson.ReactNativeCourse",
+      "config": {
+        "googleMapsApiKey": "AIzaSyBtKE8y29m03IbomLOvEFMwW-H8D94aZJA"
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.waltson.ReactNativeCourse"
+      "package": "com.waltson.ReactNativeCourse",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBtKE8y29m03IbomLOvEFMwW-H8D94aZJA"
+        }
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
