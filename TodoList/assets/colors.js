@@ -1,0 +1,9 @@
+export default {
+  PRIMARY_DARK: '#202132',
+  PRIMARY_LIGHT: '#6A6FA0',
+  PRIMARY_DARK_ACTIVE: '#28293E',
+  PRIMARY_LIGHT_ACTIVE: '#585C89',
+  BACKGROUND: '#383A57',
+  CONTENT: '#CDCFDF',
+}
+// https://coolors.co/202132-28293e-383a57-585c89-6a6fa0-cdcfdf
