@@ -1,4 +1,4 @@
-export default {
+export default COLOR = {
   PRIMARY_DARK: '#202132',
   PRIMARY_LIGHT: '#6A6FA0',
   PRIMARY_DARK_ACTIVE: '#28293E',

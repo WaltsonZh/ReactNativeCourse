@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native'
 import COLOR from './colors'
 
-export default StyleSheet.create({
+export default STYLES = StyleSheet.create({
   body: {
     flex: 1,
     backgroundColor: COLOR.BACKGROUND,
