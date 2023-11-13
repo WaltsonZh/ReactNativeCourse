@@ -29,16 +29,24 @@ export default function Todo({ navigation }) {
     }
   }
 
+  const goToTask = () => {
+    navigation.navigate('Task')
+  }
+
   return (
     <View style={styles.body}>
       <FlatList
         keyExtractor={(item, index) => index.toString()}
         data={tasks}
         renderItem={({ item }) => (
-          <TouchableOpacity style={styles.item} activeOpacity={0.7} onPress={() => {
-            dispatch(setTaskId(item.Id))
-            navigation.navigate('Task')
-          }}>
+          <TouchableOpacity
+            style={styles.item}
+            activeOpacity={0.7}
+            onPress={() => {
+              dispatch(setTaskId(item.Id))
+              goToTask()
+            }}
+          >
             <Text style={[STYLES.poppins, styles.title]} numberOfLines={1}>
               {item.Title}
             </Text>
@@ -53,7 +61,7 @@ export default function Todo({ navigation }) {
         activeOpacity={0.6}
         onPress={() => {
           dispatch(setTaskId(tasks.length + 1))
-          navigation.navigate('Task')
+          goToTask()
         }}
       >
         <Icon name='plus' size={20} color={COLOR.CONTENT} />

@@ -6,6 +6,12 @@ import { useFonts } from 'expo-font'
 import * as SplashScreen from 'expo-splash-screen'
 import COLOR from './assets/colors'
 import Navigation from './components/Navigation'
+import { Animated } from 'react-native'
+
+const av = new Animated.Value(0)
+av.addListener(() => {
+  return
+})
 
 SplashScreen.preventAutoHideAsync()
 
