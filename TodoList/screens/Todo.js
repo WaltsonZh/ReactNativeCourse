@@ -1,12 +1,51 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
+import { useEffect } from 'react'
+import { View, TouchableOpacity, StyleSheet } from 'react-native'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectTask, setTaskId, setTasks } from '../redux/taskSlice'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import STYLES from '../assets/styles'
 import COLOR from '../assets/colors'
+import { FlatList } from 'react-native'
+import { Text } from 'react-native'
 
 export default function Todo({ navigation }) {
+  const { tasks } = useSelector(selectTask)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    getTasks()
+  }, [])
+
+  const getTasks = async () => {
+    try {
+      const strTasks = await AsyncStorage.getItem('Tasks')
+      const parsedTasks = JSON.parse(strTasks)
+      if (parsedTasks && typeof parsedTasks === 'object') {
+        dispatch(setTasks(parsedTasks))
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   return (
-    <View style={STYLES.body}>
-      <TouchableOpacity style={styles.button} onPress={() => {navigation.navigate('Task')}}>
+    <View style={styles.body}>
+      <FlatList
+        data={tasks}
+        renderItem={({ item }) => (
+          <TouchableOpacity style={styles.item}>
+            <Text style={styles.title}>{item.Title}</Text>
+            <Text style={styles.subtitle}>{item.Desc}</Text>
+          </TouchableOpacity>
+        )}
+      />
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => {
+          dispatch(setTaskId(tasks.length + 1))
+          navigation.navigate('Task')
+        }}
+      >
         <Icon name='plus' size={20} color={COLOR.CONTENT} />
       </TouchableOpacity>
     </View>
@@ -14,6 +53,11 @@ export default function Todo({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  body: {
+    flex: 1,
+    backgroundColor: COLOR.BACKGROUND,
+    padding: 10,
+  },
   button: {
     width: 60,
     height: 60,
@@ -28,5 +72,27 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 15,
     shadowOpacity: 0.3,
+  },
+  item: {
+    backgroundColor: COLOR.PRIMARY_LIGHT,
+    justifyContent: 'center',
+    borderRadius: 10,
+    paddingHorizontal: 5,
+    marginVertical: 10,
+    marginHorizontal: 7,
+    elevation: 5,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 15,
+    shadowOpacity: 0.3,
+  },
+  title: {
+    color: COLOR.CONTENT,
+    fontSize: 30,
+    padding: 5
+  },
+  subtitle: {
+    color: COLOR.CONTENT,
+    fontSize: 20,
+    padding: 5
   },
 })

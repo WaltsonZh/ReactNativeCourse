@@ -1,14 +1,15 @@
-import { StatusBar, SafeAreaView } from 'react-native'
+import { StatusBar, SafeAreaView, StyleSheet } from 'react-native'
+import { Provider } from 'react-redux'
 import COLOR from './assets/colors'
-import STYLES from './assets/styles'
 import Navigation from './components/Navigation'
+import { store } from './redux/store'
 
 export default function App() {
   return (
-    <>
+    <Provider store={store}>
       <SafeAreaView
         style={[
-          STYLES.body,
+          styles.body,
           {
             backgroundColor: COLOR.PRIMARY_DARK,
           },
@@ -18,6 +19,13 @@ export default function App() {
         <Navigation />
       </SafeAreaView>
       <SafeAreaView style={{ backgroundColor: COLOR.PRIMARY_DARK }} />
-    </>
+    </Provider>
   )
 }
+
+const styles = StyleSheet.create({
+  body: {
+    flex: 1,
+    backgroundColor: COLOR.BACKGROUND,
+  },
+})
