@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { TextInput, View, StyleSheet } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -15,17 +15,37 @@ export default function Tasks({ navigation }) {
   const [title, setTitle] = useState('')
   const [desc, setDesc] = useState('')
 
+  useEffect(() => {
+    getTask()
+  }, [])
+
+  const getTask = () => {
+    const Task = tasks.find((task) => task.Id === taskId)
+    if (Task) {
+      setTitle(Task.Title)
+      setDesc(Task.Desc)
+    }
+  }
+
   const setTask = async () => {
     if (title.length == 0) {
       Alert.alert('Warning', 'Please write your task title.')
     } else {
       try {
-        let Task = {
+        const Task = {
           Id: taskId,
           Title: title,
           Desc: desc,
         }
-        let newTasks = [...tasks, Task]
+
+        const currentId = tasks.findIndex((task) => task.Id === taskId)
+        let newTasks = []
+        if (currentId > -1) {
+          newTasks = [...tasks]
+          newTasks[currentId] = Task
+        } else {
+          newTasks = [...tasks, Task]
+        }
 
         await AsyncStorage.setItem('Tasks', JSON.stringify(newTasks))
         dispatch(setTasks(newTasks))

@@ -5,6 +5,7 @@ import { selectTask, setTaskId, setTasks } from '../redux/taskSlice'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import COLOR from '../assets/colors'
+import STYLES from '../assets/styles'
 import { FlatList } from 'react-native'
 import { Text } from 'react-native'
 
@@ -31,16 +32,25 @@ export default function Todo({ navigation }) {
   return (
     <View style={styles.body}>
       <FlatList
+        keyExtractor={(item, index) => index.toString()}
         data={tasks}
         renderItem={({ item }) => (
-          <TouchableOpacity style={styles.item}>
-            <Text style={styles.title}>{item.Title}</Text>
-            <Text style={styles.subtitle}>{item.Desc}</Text>
+          <TouchableOpacity style={styles.item} activeOpacity={0.7} onPress={() => {
+            dispatch(setTaskId(item.Id))
+            navigation.navigate('Task')
+          }}>
+            <Text style={[STYLES.poppins, styles.title]} numberOfLines={1}>
+              {item.Title}
+            </Text>
+            <Text style={[STYLES.poppins, styles.subtitle]} numberOfLines={1}>
+              {item.Desc}
+            </Text>
           </TouchableOpacity>
         )}
       />
       <TouchableOpacity
         style={styles.button}
+        activeOpacity={0.6}
         onPress={() => {
           dispatch(setTaskId(tasks.length + 1))
           navigation.navigate('Task')
@@ -88,11 +98,11 @@ const styles = StyleSheet.create({
   title: {
     color: COLOR.CONTENT,
     fontSize: 30,
-    padding: 5
+    padding: 5,
   },
   subtitle: {
     color: COLOR.CONTENT,
     fontSize: 20,
-    padding: 5
+    padding: 5,
   },
 })

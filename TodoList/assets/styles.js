@@ -8,4 +8,7 @@ export default STYLES = StyleSheet.create({
     padding: 10,
     alignItems: 'center',
   },
+  poppins: {
+    fontFamily: 'Poppins',
+  },
 })
